@@ -11,6 +11,7 @@ use PHPStan\Type\DynamicMethodReturnTypeExtension;
 use PHPStan\Type\ErrorType;
 use PHPStan\Type\Generic\GenericObjectType;
 use PHPStan\Type\Generic\TemplateType;
+use PHPStan\Type\MixedType;
 use PHPStan\Type\ObjectType;
 use PHPStan\Type\Type;
 use PHPStan\Type\TypeTraverser;
@@ -82,6 +83,9 @@ class RepositoryFindAllDynamicReturnTypeExtension implements DynamicMethodReturn
 
 		$modelName = $this->translateRepositoryNameToModelName($className);
 
+		if ($modelName === null) {
+			return new MixedType(\false);
+		}
 		return new GenericObjectType(QueryResultInterface::class, [new ObjectType($modelName)]);
 	}
 

@@ -18,12 +18,10 @@ trait Typo3ClassNamingUtilityTrait
 	 *
 	 * @return class-string
 	 */
-	protected function translateRepositoryNameToModelName(string $repositoryClassName): string
+	protected function translateRepositoryNameToModelName(string $repositoryClassName): ?string
 	{
 		if (!is_a($repositoryClassName, RepositoryInterface::class, true)) {
-			throw new \PHPStan\ShouldNotHappenException(
-				sprintf('Repository class "%s" must implement "%s"', $repositoryClassName, RepositoryInterface::class)
-			);
+			return null;
 		}
 		/** @var class-string $modelClass */
 		$modelClass = ClassNamingUtility::translateRepositoryNameToModelName($repositoryClassName);

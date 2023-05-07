@@ -73,7 +73,7 @@ class RepositoryFindByMethodReflection implements MethodReflection
 	/**
 	 * @return class-string
 	 */
-	private function getModelName(): string
+	private function getModelName(): ?string
 	{
 		$className = $this->classReflection->getName();
 		return $this->translateRepositoryNameToModelName($className);
@@ -84,15 +84,21 @@ class RepositoryFindByMethodReflection implements MethodReflection
 	 */
 	public function getParameters(): array
 	{
-		$modelReflection = $this->reflectionProvider->getClass($this->getModelName());
+        $modelName = $this->getModelName();
+        if ($modelName !== null) {
+            $modelReflection = $this->reflectionProvider->getClass($modelName);
 
-		if ($modelReflection->hasNativeProperty($this->getPropertyName())) {
-			$type = $modelReflection->getNativeProperty($this->getPropertyName())->getReadableType();
-		} else {
-			$type = new \PHPStan\Type\MixedType(\false);
-		}
+            if ($modelReflection->hasNativeProperty($this->getPropertyName())) {
+                $type = $modelReflection->getNativeProperty($this->getPropertyName())->getReadableType();
+            } else {
+                $type = new \PHPStan\Type\MixedType(\false);
+            }
+        } else {
+            // TODO check if this is correct
+            $type = new \PHPStan\Type\MixedType(\false);
+        }
 
-		return [
+        return [
 			new RepositoryFindByParameterReflection('arg', $type),
 		];
 	}

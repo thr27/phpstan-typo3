@@ -8,6 +8,7 @@ use PHPStan\Reflection\MethodReflection;
 use PHPStan\Type\DynamicMethodReturnTypeExtension;
 use PHPStan\Type\ErrorType;
 use PHPStan\Type\Generic\GenericObjectType;
+use PHPStan\Type\MixedType;
 use PHPStan\Type\ObjectType;
 use PHPStan\Type\Type;
 use PHPStan\Type\TypeWithClassName;
@@ -52,7 +53,12 @@ class RepositoryQueryDynamicReturnTypeExtension implements DynamicMethodReturnTy
 
 			$modelName = $this->translateRepositoryNameToModelName($className);
 
-			$modelType = [new ObjectType($modelName)];
+			if ($modelName !== null) {
+				$modelType = [new ObjectType($modelName)];
+			} else {
+				// TODO check if this is correct
+				$modelType = [new MixedType(\false)];
+			}
 		}
 
 		return new GenericObjectType(QueryInterface::class, $modelType);

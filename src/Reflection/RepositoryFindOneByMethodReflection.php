@@ -73,7 +73,7 @@ class RepositoryFindOneByMethodReflection implements MethodReflection
 	/**
 	 * @return class-string
 	 */
-	private function getModelName(): string
+	private function getModelName(): ?string
 	{
 		$className = $this->classReflection->getName();
 
@@ -85,7 +85,13 @@ class RepositoryFindOneByMethodReflection implements MethodReflection
 	 */
 	public function getParameters(): array
 	{
-		$modelReflection = $this->reflectionProvider->getClass($this->getModelName());
+        $modelClassName = $this->getModelName();
+        if ($modelClassName === null) {
+            // TODO check if this is correct
+            return [];
+        }
+
+        $modelReflection = $this->reflectionProvider->getClass($modelClassName);
 
 		$type = $modelReflection->getNativeProperty($this->getPropertyName())->getReadableType();
 

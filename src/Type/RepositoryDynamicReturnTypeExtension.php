@@ -44,6 +44,11 @@ class RepositoryDynamicReturnTypeExtension implements DynamicMethodReturnTypeExt
 
 		$modelName = $this->translateRepositoryNameToModelName($variableType->getClassName());
 
+		if ($modelName === null) {
+			// TODO check if this is correct
+			return ParametersAcceptorSelector::selectSingle($methodReflection->getVariants())->getReturnType();
+		}
+
 		return TypeCombinator::addNull(new ObjectType($modelName));
 	}
 
