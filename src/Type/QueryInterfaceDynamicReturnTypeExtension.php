@@ -60,7 +60,9 @@ class QueryInterfaceDynamicReturnTypeExtension implements DynamicMethodReturnTyp
 					$classReflection->getName()
 				);
 
-				$modelType = [new ObjectType($modelName)];
+				if ($modelName !== null) {
+					$modelType = [new ObjectType($modelName)];
+				}
 			}
 		}
 
